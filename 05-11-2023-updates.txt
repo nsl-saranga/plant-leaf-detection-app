@@ -1,0 +1,1 @@
+Today I(Nisal) did the data preparation and preprocessing parts. While preparing data i faced many challanges. Specially as some images in the datasets has the error : "Corrupt JPEG data: premature end of data segment". In order to fix this (to identify and remove) those corrupted image files I implemented the code in the correction.py file
