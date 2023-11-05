@@ -1,8 +1,15 @@
+import inline
 import numpy as np
 import cv2
 import os
+import keras
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+from keras.models import Sequential
+from keras.layers import Dense, MaxPooling2D, Conv2D, Flatten
+
+
+
 
 # data preparing
 directory_path = 'Maize'
@@ -41,3 +48,16 @@ y_test = label_encoder.fit_transform(y_test)
 
 # Ramitha and Habishek continue the rest from now on. You can refer to the chapter 5 : 2nd and 3rd sub topics
 # from the linkeldn video tutoril i sent you. Good luck guys.
+cnn = Sequential()
+
+cnn.add(Conv2D(32,(5,5), input_shape=(224,224,3), padding="same", activation="relu"))
+cnn.add(Conv2D(32,(5,5),activation="relu"))
+cnn.add(MaxPooling2D(pool_size=(2,2)))
+cnn.add(Conv2D(64, kernel_size=(5,5), padding= 'same', activation='relu') )
+cnn.add(Conv2D(64,(5,5),activation="relu"))
+cnn.add(MaxPooling2D(pool_size=(2,2)))
+cnn.add(Flatten())
+cnn.add(Dense(1024, activation='relu'))
+cnn.add(Dense(10, activation='softmax'))
+cnn.compile(optimizer='adam', loss='categorical_crossentroppy', metrics=['accuracy'])
+cnn.summary()
