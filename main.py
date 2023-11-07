@@ -13,7 +13,7 @@ for category_name in category_names:
     for filename in os.listdir(directory_path + "/" + category_name):
         if filename.endswith(".jpg"):
             img = cv2.imread(os.path.join(directory_path + "/" + category_name, filename))
-            resized_img = cv2.resize(img, (224, 224)) # i had to reduce the image size from (400, 400) to (224,224)
+            resized_img = cv2.resize(img, (400, 400)) # i had to reduce the image size from (400, 400) to (224,224)
             X_list.append(resized_img)
             Y_list.append(category_name)
 
