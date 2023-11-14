@@ -1,4 +1,4 @@
-import inline
+# import inline
 import numpy as np
 import cv2
 import os
@@ -8,13 +8,11 @@ import keras
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from keras.models import Sequential
-from keras.layers import Dense, MaxPooling2D, Conv2D, Flatten
-
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.utils import to_categorical
-
-
+from tensorflow.python.keras.layers import Dense, MaxPooling2D, Conv2D, Flatten
+from tensorflow.python.keras.models import Sequential
+import matplotlib.pyplot as plt
+# from tensorflow.python.keras.layers import Dense, Flatten
+# from tensorflow.python.keras.utils import to_categorical
 
 # data preparing
 directory_path = 'Maize'
@@ -53,48 +51,46 @@ y_test = label_encoder.fit_transform(y_test)
 
 # Ramitha and Habishek continue the rest from now on. You can refer to the chapter 5 : 2nd and 3rd sub topics
 # from the linkeldn video tutoril I sent you. Good luck guys.
-cnn = Sequential()
-
-cnn.add(Conv2D(32,(5,5), input_shape=(224,224,3), padding="same", activation="relu"))
-cnn.add(Conv2D(32,(5,5),activation="relu"))
-cnn.add(MaxPooling2D(pool_size=(2,2)))
-cnn.add(Conv2D(64, kernel_size=(5,5), padding= 'same', activation='relu') )
-cnn.add(Conv2D(64,(5,5),activation="relu"))
-cnn.add(MaxPooling2D(pool_size=(2,2)))
-cnn.add(Flatten())
-cnn.add(Dense(1024, activation='relu'))
-cnn.add(Dense(10, activation='softmax'))
-cnn.compile(optimizer='adam', loss='categorical_crossentroppy', metrics=['accuracy'])
-cnn.summary()
-
-#Nural Network Classification
-#cnn.fit(X_train, y_train, epochs=10, validation_data=(X_test, y_test))
-#cnn.save('maize.h5')
-
-# classification
-#model = tf.keras.models.load_model('maize.h5')
-#prediction = model.predict(X_test)
-#print(prediction)
-#print(np.argmax(prediction[0]))
-#print(y_test[0])
-
-# Convert labels to one-hot encoding
-num_classes = len(np.unique(y))
-y_train = to_categorical(y_train, num_classes)
-y_test = to_categorical(y_test, num_classes)
-
-# Build the neural network model
 model = Sequential()
-model.add(Flatten(input_shape=X_train.shape[1:]))
-model.add(Dense(128, activation='relu'))
-model.add(Dense(num_classes, activation='softmax'))
 
-# Compile the model
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+# 3 convolutional layers
+model.add(Conv2D(32, kernel_size=(3, 3), input_shape=(224, 224, 3), padding="same", activation="relu"))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Train the model
-model.fit(X_train, y_train, epochs=10, batch_size=32, validation_data=(X_test, y_test))
+model.add(Conv2D(64, kernel_size=(3, 3), padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Evaluate the model
-test_loss, test_acc = model.evaluate(X_test, y_test, verbose=2)
-print('\nTest accuracy:', test_acc)
+model.add(Conv2D(128, kernel_size=(3, 3), padding='same', activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+# flatten the network and input layer in ANN.
+model.add(Flatten())
+
+# fully connected layers.
+model.add(Dense(1024, activation='relu'))
+
+model.add(Dense(256, activation='relu'))
+
+model.add(Dense(10, activation='softmax'))
+
+# compiling the model.
+model.compile(optimizer='adam', loss='categorical_crossentroppy', metrics=['accuracy'])
+print(model.summary())
+
+# training the model.
+history_cnn = model.fit(X_train, y_train, epochs=5, verbose=1, validation_data=(X_test, y_test))
+
+# print(history.history['accuracy'])
+plt.plot(history_cnn.history['accuracy'])
+plt.show()
+plt.plot(history_cnn.history['val_accuracy'])
+plt.show()
+plt.plot(history_cnn.history['loss'])
+plt.show()
+plt.plot(history_cnn.history['val_loss'])
+plt.show()
+
+# evaluate the model.
+score = model.evaluate(X_test, y_test)
+print(score)
+
