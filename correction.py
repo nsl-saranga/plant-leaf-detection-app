@@ -2,7 +2,7 @@ import cv2
 import os
 import shutil
 from skimage import io
-directory_path = 'Maize/leaf spot'  # Replace with your image directory
+directory_path = 'Maize/rust'  # Replace with your image directory
 
 # for filename in os.listdir(directory_path):
 #     image_path = os.path.join(directory_path, filename)
