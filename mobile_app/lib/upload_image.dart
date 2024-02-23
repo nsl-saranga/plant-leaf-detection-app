@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-void main() {
-  runApp(MyApp());
-}
+// void main() {
+//   runApp(MyApp());
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -26,7 +26,8 @@ class _HomePageState extends State<HomePage> {
   File? _image;
 
   Future getImageFromCamera() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
     setState(() {
       _image = pickedFile != null ? File(pickedFile.path) : null;
@@ -34,7 +35,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future getImageFromGallery() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
       _image = pickedFile != null ? File(pickedFile.path) : null;
@@ -45,8 +47,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: const Text('Image Picker Example'),
-      ),
+          // title: const Text('Image Picker Example'),
+          ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -54,9 +56,9 @@ class _HomePageState extends State<HomePage> {
             _image == null
                 ? const Text('No image selected.')
                 : Image.file(
-              _image!,
-              height: 400,
-            ),
+                    _image!,
+                    height: 400,
+                  ),
             const SizedBox(height: 50),
             Center(
               child: Row(
@@ -67,16 +69,14 @@ class _HomePageState extends State<HomePage> {
                     child: const Text('Upload'),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
-                        foregroundColor: Colors.white
-                    ),
+                        foregroundColor: Colors.white),
                   ),
                   ElevatedButton(
                     onPressed: () {},
                     child: const Text('Retake'),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
-                        foregroundColor: Colors.white
-                    ),
+                        foregroundColor: Colors.white),
                   ),
                 ],
               ),

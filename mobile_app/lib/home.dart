@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'drawer.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        key: _scaffoldKey,
+        drawer: CustomDrawer(),
         body: Stack(
           children: [
             // Background image
@@ -30,7 +34,7 @@ class Home extends StatelessWidget {
                 icon: const Icon(Icons.menu,
                     color: Color.fromARGB(255, 0, 0, 0), size: 40),
                 onPressed: () {
-                  print('Hamburger menu pressed');
+                  _scaffoldKey.currentState?.openDrawer();
                 },
               ),
             ),
@@ -128,8 +132,7 @@ class Home extends StatelessWidget {
                   ),
                   color:
                       const Color.fromARGB(31, 107, 107, 107).withOpacity(0.5),
-                  backgroundBlendMode:
-                      BlendMode.lighten, // Blend image with the background
+                  backgroundBlendMode: BlendMode.lighten,
                 ),
               ),
             ),
@@ -164,21 +167,19 @@ class Home extends StatelessWidget {
                   ),
                   color:
                       const Color.fromARGB(31, 107, 107, 107).withOpacity(0.5),
-                  backgroundBlendMode:
-                      BlendMode.lighten, // Blend image with the background
+                  backgroundBlendMode: BlendMode.lighten,
                 ),
               ),
             ),
             // Start button
             Positioned(
-              bottom: 150, // Adjust bottom position as needed
-              left: 140, // Adjust left position as needed
+              bottom: 150,
+              left: 140,
               child: SizedBox(
                 width: 118,
                 height: 44,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add your onPressed logic here
                     print('Start button pressed');
                   },
                   style: ButtonStyle(
