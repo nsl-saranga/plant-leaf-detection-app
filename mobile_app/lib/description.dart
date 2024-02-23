@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: Home(),
-  ));
-}
+// void main() {
+//   runApp(MaterialApp(
+//     home: Home(),
+//   ));
+// }
 
 class Home extends StatelessWidget {
   final String imageUrl =
@@ -14,8 +14,8 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Text('Disease/ Pest Details'),
-      ),
+          // title: Text('Disease/ Pest Details'),
+          ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -23,9 +23,7 @@ class Home extends StatelessWidget {
           children: <Widget>[
             Text(
               'Disease/ Pest Name',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0 ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
             ),
             SizedBox(height: 8.0),
             Text(
