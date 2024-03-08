@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: HomeScreen(),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -30,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: MediaQuery.of(context).size.height * 0.21, // Set the height to 20% of the screen
           decoration: BoxDecoration(
             color: Colors.grey[800], // Set background color
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)), // Set rounded corners
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20.0)), // Set rounded corners
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -38,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: Center(
+                title: const Center(
                   child: Text(
                     'Open Camera',
                     style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -50,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               ListTile(
-                title: Center(
+                title: const Center(
                   child: Text(
                     'Open Gallery',
                     style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -83,12 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Camera and Gallery Drawer'),
+        title: const Text('Camera and Gallery Drawer'),
       ),
       body: Center(
         child: ElevatedButton(
           onPressed: _showDrawer,
-          child: Text('Show Drawer'),
+          child: const Text('Show Drawer'),
         ),
       ),
     );

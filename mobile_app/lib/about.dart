@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'drawer.dart';
 
 // void main() {
 //   runApp(MyApp());
 // }
 
-class MyApp extends StatelessWidget {
+class About extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   final List<String> imagePaths = [
     'assets/A.jpg',
     'assets/B.jpg',
@@ -23,25 +26,40 @@ class MyApp extends StatelessWidget {
     'Frank Bottom',
   ];
 
+  About({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(),
-        endDrawer: Drawer(
-          child: ListView(),
-        ),
+        key: _scaffoldKey,
+        drawer: const CustomDrawer(),
+        //appBar: AppBar(),
+        // endDrawer: Drawer(
+        //   child: ListView(),
+        // ),
         body: Column(
           children: [
+            Positioned(
+              top: 19,
+              right: 16,
+              child: IconButton(
+                icon: const Icon(Icons.menu,
+                    color: Color.fromARGB(255, 0, 0, 0), size: 40),
+                onPressed: () {
+                  _scaffoldKey.currentState?.openDrawer();
+                },
+              ),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
                   color: Colors.grey[200],
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'About Us',
                         style: TextStyle(
                           fontSize: 24,
@@ -49,18 +67,19 @@ class MyApp extends StatelessWidget {
                           letterSpacing: 0.5,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'AeneaSuspendisse Donec et convallis purus. Sed pharetra posuere velit in efficitur. Donec mauris tellus, vulputate id bibendum id, faucibus sit amet mauris. Curabitur mattis efficitur orci in varius. Ut ut arcu a lectus luctus hendrerit. Duis consequat mi eu dui suscipit eleifend. Fusce bibendum tortor diam, vitae feugiat dolor volutpat vitae.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                           letterSpacing: 0.5,
                         ),
                       ),
-                      SizedBox(height: 16.0),
+                      const SizedBox(height: 16.0),
                       GridView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                           crossAxisSpacing: 4.0,
                           mainAxisSpacing: 4.0,
@@ -75,10 +94,10 @@ class MyApp extends StatelessWidget {
                                 width: 70.0,
                                 fit: BoxFit.cover,
                               ),
-                              SizedBox(height: 4.0),
+                              const SizedBox(height: 4.0),
                               Text(
                                 teamMemberNames[index],
-                                style: TextStyle(fontSize: 12.0),
+                                style: const TextStyle(fontSize: 12.0),
                               ),
                             ],
                           );
@@ -91,8 +110,8 @@ class MyApp extends StatelessWidget {
             ),
             Container(
               color: Colors.grey[800],
-              padding: EdgeInsets.all(16.0),
-              child: Column(
+              padding: const EdgeInsets.all(16.0),
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(

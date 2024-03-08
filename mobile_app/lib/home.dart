@@ -1,16 +1,73 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'drawer.dart';
+import 'upload_image.dart';
 
-class Home extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  File? _image;
+  _HomePageState();
+
+  Future<void> getImageFromCamera() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = pickedFile != null ? File(pickedFile.path) : null;
+      if (_image != null) {
+        navigateToUploadImage(); // Navigate on image selection
+      }
+    });
+  }
+
+  Future<void> getImageFromGallery() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = pickedFile != null ? File(pickedFile.path) : null;
+      if (_image != null) {
+        navigateToUploadImage(); // Navigate on image selection
+      }
+    });
+  }
+
+  void navigateToUploadImage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Upload_Image(), // No argument passed
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         key: _scaffoldKey,
-        drawer: CustomDrawer(),
+        drawer: const CustomDrawer(),
         body: Stack(
           children: [
             // Background image
@@ -45,7 +102,7 @@ class Home extends StatelessWidget {
               child: Container(
                 width: 324,
                 height: 68,
-                color: Color.fromARGB(0, 255, 255, 255),
+                color: const Color.fromARGB(0, 255, 255, 255),
                 child: const Center(
                   child: Text(
                     'Upload an image of the diseased leaf or pest',
@@ -67,7 +124,7 @@ class Home extends StatelessWidget {
               child: Container(
                 width: 279,
                 height: 35,
-                color: Color.fromARGB(0, 255, 255, 255),
+                color: const Color.fromARGB(0, 255, 255, 255),
                 child: const Center(
                   child: Text(
                     'Take a picture of the affected maize plant leaf and upload it. (follow the below instructions.)',
@@ -105,7 +162,7 @@ class Home extends StatelessWidget {
             Positioned(
               top: 440,
               left: 130,
-              child: Container(
+              child: SizedBox(
                 width: 13,
                 height: 22,
                 child: SvgPicture.asset(
@@ -113,7 +170,8 @@ class Home extends StatelessWidget {
                   placeholderBuilder: (BuildContext context) => Container(
                     width: 13,
                     height: 22,
-                    color: Color.fromARGB(31, 107, 107, 107).withOpacity(0.5),
+                    color: const Color.fromARGB(31, 107, 107, 107)
+                        .withOpacity(0.5),
                   ),
                 ),
               ),
@@ -140,7 +198,7 @@ class Home extends StatelessWidget {
             Positioned(
               top: 440,
               left: 250,
-              child: Container(
+              child: SizedBox(
                 width: 13,
                 height: 22,
                 child: SvgPicture.asset(
@@ -148,7 +206,8 @@ class Home extends StatelessWidget {
                   placeholderBuilder: (BuildContext context) => Container(
                     width: 13,
                     height: 22,
-                    color: Color.fromARGB(31, 107, 107, 107).withOpacity(0.5),
+                    color: const Color.fromARGB(31, 107, 107, 107)
+                        .withOpacity(0.5),
                   ),
                 ),
               ),
@@ -180,7 +239,49 @@ class Home extends StatelessWidget {
                 height: 44,
                 child: ElevatedButton(
                   onPressed: () {
-                    print('Start button pressed');
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: 150,
+                          color: Colors.grey[800],
+                          child: Column(
+                            children: [
+                              ListTile(
+                                title: const Center(
+                                  child: Text(
+                                    'Open Camera',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                onTap: () {
+                                  getImageFromCamera();
+                                  Navigator.pop(context); // Close the drawer
+                                },
+                              ),
+                              ListTile(
+                                title: const Center(
+                                  child: Text(
+                                    'Open Gallery',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                onTap: () {
+                                  getImageFromGallery();
+                                  Navigator.pop(context); // Close the drawer
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(

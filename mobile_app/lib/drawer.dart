@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'about.dart';
+import 'home.dart';
 
 class CustomDrawer extends StatelessWidget {
+  const CustomDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -18,7 +22,8 @@ class CustomDrawer extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    // Navigate home.
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MyApp()));
                   },
                 ),
                 ListTile(
@@ -27,7 +32,8 @@ class CustomDrawer extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onTap: () {
-                    // Navigate to about us.
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => About()));
                   },
                 ),
               ],
