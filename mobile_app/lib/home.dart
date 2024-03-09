@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getImageFromGallery() async {
     final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
     setState(() {
       _image = pickedFile != null ? File(pickedFile.path) : null;
