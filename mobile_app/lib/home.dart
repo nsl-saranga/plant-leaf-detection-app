@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Upload_Image(), // No argument passed
+        builder: (context) => const Upload_Image(), // No argument passed
       ),
     );
   }
