@@ -3,24 +3,27 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'description.dart';
 import 'drawer.dart';
+import 'home.dart';
 
 // void main() {
 //   runApp(MyApp());
 // }
 
 class Upload_Image extends StatelessWidget {
-  const Upload_Image({Key? key}) : super(key: key);
+  final File? image;
+  const Upload_Image({Key? key, required this.image}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    return MaterialApp(
+      home: HomePage(image: image),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final File? image;
+  const HomePage({Key? key, this.image}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -29,6 +32,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   File? _image;
+  @override
+  void initState() {
+    super.initState();
+    _image = widget.image;
+  }
 
   Future<void> getImage() async {
     final pickedFile =

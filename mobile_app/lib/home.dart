@@ -18,9 +18,12 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final File? image;
+
+  const HomePage({Key? key, this.image}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -31,33 +34,33 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> getImageFromCamera() async {
     final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
-    setState(() {
-      _image = pickedFile != null ? File(pickedFile.path) : null;
-      if (_image != null) {
-        navigateToUploadImage(); // Navigate on image selection
-      }
-    });
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+        navigateToUploadImage(_image!);
+      });
+    }
   }
 
   Future<void> getImageFromGallery() async {
     final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      _image = pickedFile != null ? File(pickedFile.path) : null;
-      if (_image != null) {
-        navigateToUploadImage(); // Navigate on image selection
-      }
-    });
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+        navigateToUploadImage(_image!);
+      });
+    }
   }
 
-  void navigateToUploadImage() {
+  void navigateToUploadImage(File? image) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const Upload_Image(), // No argument passed
+        builder: (context) => Upload_Image(image: image),
       ),
     );
   }
@@ -69,7 +72,7 @@ class _HomePageState extends State<HomePage> {
         key: _scaffoldKey,
         drawer: const CustomDrawer(),
         body: Stack(
-          children: [
+          children: <Widget>[
             // Background image
             Image.asset(
               "assets/s-l1600.jpg",
@@ -257,9 +260,11 @@ class _HomePageState extends State<HomePage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                onTap: () {
-                                  getImageFromCamera();
-                                  Navigator.pop(context); // Close the drawer
+                                onTap: () async {
+                                  await getImageFromCamera();
+                                  if (_image != null) {
+                                    navigateToUploadImage(_image!);
+                                  }
                                 },
                               ),
                               ListTile(
@@ -272,9 +277,11 @@ class _HomePageState extends State<HomePage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                onTap: () {
-                                  getImageFromGallery();
-                                  Navigator.pop(context); // Close the drawer
+                                onTap: () async {
+                                  await getImageFromGallery();
+                                  if (_image != null) {
+                                    navigateToUploadImage(_image!);
+                                  }
                                 },
                               ),
                             ],
@@ -282,6 +289,15 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     );
+                    // send image to upload_image.dart and navigate
+                    // navigateToUploadImage(File as File?, _image);
+
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => Upload_Image(image: _image),
+                    //   ),
+                    // );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
