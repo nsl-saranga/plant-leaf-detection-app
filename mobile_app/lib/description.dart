@@ -3,28 +3,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'drawer.dart';
 
-// void main() {
-//   runApp(MaterialApp(
-//     home: Home(),
-//   ));
-// }
-
 class Description extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final String imageUrl =
       'https://cdn.britannica.com/89/126689-004-D622CD2F/Potato-leaf-blight.jpg';
+  final String result; // Remove this line
 
-  Description({super.key, File? image});
+  Description({Key? key, required this.result}) : super(key: key); // Modify the constructor
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const CustomDrawer(),
-      // appBar: AppBar(
-
-      //     // title: Text('Disease/ Pest Details'),
-      //     ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -41,8 +32,8 @@ class Description extends StatelessWidget {
                 },
               ),
             ),
-            const Text(
-              'Disease/ Pest Name',
+            Text(
+              'Prediction : $result', // Use result directly here
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
             ),
             const SizedBox(height: 8.0),

@@ -4,6 +4,8 @@ import 'dart:io';
 import 'description.dart';
 import 'drawer.dart';
 import 'home.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 // void main() {
 //   runApp(MyApp());
@@ -31,11 +33,48 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String prediction = '';
   File? _image;
+
   @override
   void initState() {
     super.initState();
     _image = widget.image;
+  }
+
+
+
+  Future<String> uploadImage() async {
+    final request = http.MultipartRequest(
+        "POST", Uri.parse('https://cae7-112-134-98-125.ngrok-free.app/upload'));
+    final headers = {"Content-type": "Multipart/form-data"};
+
+    request.files.add(http.MultipartFile(
+        'image',
+        _image!.readAsBytes().asStream(),
+        _image!.lengthSync(),
+        filename: _image!.path.split("/").last));
+    request.headers.addAll(headers);
+
+    try {
+      final response = await request.send();
+      final res = await http.Response.fromStream(response);
+      final resJson = jsonDecode(res.body);
+      setState(() {
+        prediction = resJson['prediction'];
+      });
+    } catch (e) {
+      print("Error uploading image: $e");
+    }
+    return prediction;
+  }
+
+  Future<void> _uploadAndNavigate() async {
+    String result = await uploadImage();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Description(result:result)),
+    );
   }
 
   Future<void> getImage() async {
@@ -101,12 +140,9 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Description()));
-                    },
+                    onPressed: () async {
+                      _uploadAndNavigate();
+                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         foregroundColor: Colors.white),
