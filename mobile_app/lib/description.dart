@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'drawer.dart';
+import 'firebase_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Description extends StatelessWidget {
+  final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final String imageUrl =
       'https://cdn.britannica.com/89/126689-004-D622CD2F/Potato-leaf-blight.jpg';
@@ -16,109 +19,85 @@ class Description extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const CustomDrawer(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Positioned(
-              top: 19,
-              right: 16,
-              child: IconButton(
-                icon: const Icon(Icons.menu,
-                    color: Color.fromARGB(255, 0, 0, 0), size: 40),
-                onPressed: () {
-                  _scaffoldKey.currentState?.openDrawer();
-                },
-              ),
-            ),
-            Text(
-              'Prediction : $result', // Use result directly here
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            ),
-            const SizedBox(height: 8.0),
-            const Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec consequat velit. Nulla vitae magna eu turpis aliquam feugiat. ...',
-            ),
-            const SizedBox(height: 16.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Image.network(
-                  imageUrl,
-                  width: 100,
-                  height: 100,
-                ),
-                Image.network(
-                  imageUrl,
-                  width: 100,
-                  height: 100,
-                ),
-                Image.network(
-                  imageUrl,
-                  width: 100,
-                  height: 100,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'How to Cure',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8.0),
-            const Column(
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  leading: Icon(Icons.arrow_right),
-                  title: Text('Item 1'),
+              children: <Widget>[
+                Positioned(
+                  top: 19,
+                  right: 16,
+                  child: IconButton(
+                    icon: const Icon(Icons.menu,
+                        color: Color.fromARGB(255, 0, 0, 0), size: 40),
+                    onPressed: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
+                  ),
                 ),
-                ListTile(
-                  leading: Icon(Icons.arrow_right),
-                  title: Text('Item 2'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.arrow_right),
-                  title: Text('Item 3'),
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Disease')
+                      .doc("D1")
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      var document = snapshot.data!;
+                      if (!document.exists) {
+                        return Center(
+                          child: Text('Document "D1" does not exist.'),
+                        );
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            height: MediaQuery.of(context).size.height / 6,
+                            child: Text(
+                              "Identified Disease/Pest Name: " +
+                                  document['name'],
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Cure Tips:',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: document['Cure Tips'].length,
+                            itemBuilder: (context, index) {
+                              final tip = document['Cure Tips'][index];
+                              return ListTile(
+                                leading: Icon(Icons.check),
+                                title: Text(tip),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
               ],
             ),
-            const SizedBox(height: 16.0),
-            const Text(
-              'Other Possible Results',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16.0),
-            GestureDetector(
-              onTap: () {
-                // Handle link click action here
-                print("Link Clicked!");
-              },
-              child: const Text(
-                'Possible result 2',
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-            const SizedBox(height: 12.0),
-            GestureDetector(
-              onTap: () {
-                // Handle link click action here
-                print("Link Clicked!");
-              },
-              child: const Text(
-                'Possible result 3',
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
