@@ -61,7 +61,7 @@ class _DescriptionState extends State<Description> {
               StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('Disease')
-                    .doc("D1")
+                    .doc(_getDocumentId(widget.result))
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -71,32 +71,20 @@ class _DescriptionState extends State<Description> {
                     );
                   } else {
                     var document = snapshot.data!;
+                    // print("test "+document['images'].toString());
                     if (!document.exists) {
                       return Center(
                         child: Text('Document "${_getDocumentId(widget.result)}" does not exist.'),
                       );
                     }
-                    dynamic imageData = document['images'];
-                    String imageRef;
-                    if (imageData is String) {
-                      imageRef = imageData;
-                    } else if (imageData is DocumentReference) {
-                      imageRef = imageData.path;
-                    } else {
-                      return Text('Invalid image reference');
-                    }
-                    DocumentReference imageDocRef =
-                    FirebaseFirestore.instance.doc(imageRef);
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          height: MediaQuery.of(context).size.height / 6,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+
                               Text(
                                 "Disease/Pest Name: " + document['name'],
                                 style: TextStyle(
@@ -105,43 +93,60 @@ class _DescriptionState extends State<Description> {
                                   letterSpacing: 0.5,
                                   color: Colors.indigo,
                                 ),
-                              ),// Add some space between the name and
+                              ),//
+                              SizedBox(height: 20),// Adjust the height as needed
+                              Text(
+                                'Example Image:',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Center(
+                                child: Image.network(document['images'].toString(),
+                                height: 250,
+                                width: 250,),
+                              ),
+
+                              Text(
+                                document['description'],
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  // fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),//
+                              SizedBox(height: 20),// Adjust the height as needed
+                              Text(
+                                'Cure Tips:',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              ListView.builder(
+                                physics: NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
+                                shrinkWrap: true,
+                                itemCount: document['Cure Tips'].length,
+                                itemBuilder: (context, index) {
+                                  final tip = document['Cure Tips'][index];
+                                  return ListTile(
+                                    leading: Icon(Icons.check),
+                                    title: Text(
+                                      tip,
+                                      textAlign: TextAlign.justify,  // Adjust the textAlign property here
+                                      style: TextStyle(
+                                        fontSize: 18, // Adjust the font size as needed
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ],
                           ),
-                        ),
-
-                        Text(
-                          document['description'],
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            fontSize: 18,
-                            // fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                        ),//
-                        SizedBox(height: 20),// Adjust the height as needed
-                        Text(
-                          'Cure Tips:',
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        ListView.builder(
-                          physics: NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
-                          shrinkWrap: true,
-                          itemCount: document['Cure Tips'].length,
-                          itemBuilder: (context, index) {
-                            final tip = document['Cure Tips'][index];
-                            return ListTile(
-                              leading: Icon(Icons.check),
-                              title: Text(tip),
-                            );
-                          },
-                        ),
-                        SizedBox(height: 10), // Adjust the height as needed
-                        Image.network("https://www.sanbi.org/wp-content/uploads/2018/10/armyworm-1.jpg"),
-                      ],
+                        ],
+                      ),
                     );
                   }
                 },
