@@ -21,7 +21,7 @@ Y_list = []
 for category_name in CATEGORIES:
     category_index = CATEGORIES.index(category_name)
     for filename in os.listdir(os.path.join(directory_path, category_name)):
-        if filename.endswith(".jpg"):
+        if filename.endswith(".jpeg") or filename.endswith(".jpg") or filename.endswith(".JPG"):
             img = cv2.imread(os.path.join(directory_path, category_name, filename))
             resized_img = cv2.resize(img, (224, 224))
             X_list.append(resized_img)
@@ -69,7 +69,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 print(model.summary())
 
 # training the model.
-history_cnn = model.fit(X_train, y_train, epochs=3, verbose=1, validation_data=(X_test, y_test))
+history_cnn = model.fit(X_train, y_train, epochs=8, verbose=1, validation_data=(X_test, y_test))
 
 model_filename = 'trained_model.h5'
 model.save(model_filename)
