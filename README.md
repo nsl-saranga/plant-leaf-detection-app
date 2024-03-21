@@ -1,2 +1,3 @@
 # plant-diseasepest-detection-app
-This is the mobile app we are going to implement for **Corn** Disease and Pest Identification using Deep Learning
+This repo contains the files that are been used for the model creation and mobile app development
+But it doesnt contain the dataset (Maize) and the saved model in ".h5" format (trained_model.h5)
