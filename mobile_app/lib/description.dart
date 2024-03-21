@@ -31,7 +31,7 @@ class _DescriptionState extends State<Description> {
       return "D4";
     } else if (result == "Healthy") {
       return "D5";
-    } else if (result == "Weevil ") {
+    } else if (result == "Weevil") {
       return "D6";
     } else {
       // Default case, return a fallback document ID
